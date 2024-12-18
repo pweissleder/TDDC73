@@ -168,12 +168,12 @@ const styles = StyleSheet.create({
     perspective: '1000',
   },
   backgroundImage: {
-    position: 'absolute', // Ensures the image is behind other content
-    top: 0, // Aligns the image to the top of the card
-    left: 0, // Aligns the image to the left of the card
-    width: '100%', // Scales the image to the full width of the card
-    height: '100%', // Scales the image to the full height of the card
-    borderRadius: 10, // Applies the same border radius as the card
+    position: 'absolute',
+    top: 0, 
+    left: 0,
+    width: '100%', 
+    height: '100%', 
+    borderRadius: 10,
     resizeMode: 'cover', // Ensures the image covers the entire card area
   },
   overlay: {

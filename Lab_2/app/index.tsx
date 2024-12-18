@@ -72,13 +72,13 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   cardWrapper: {
-    zIndex: 2, // Assegura que la targeta estigui davant
+    zIndex: 2, 
     position: 'absolute',
     top: 0,
   },
   formWrapper: {
-    zIndex: 1, // El formulari queda darrere de la targeta
-    marginTop: 110, // Espai per ajustar la superposició
+    zIndex: 1, 
+    marginTop: 110, 
     width: '90%',
     height: 415,
     backgroundColor: '#ffffff',
@@ -90,8 +90,8 @@ const styles = StyleSheet.create({
     elevation: 5, // Ombra per Android
   },
   webFormWrapper: {
-    width: 450, // Amplada més gran que la targeta per a la plataforma web
-    maxWidth: '80%', // Limitar l'amplada a un màxim del 80% de la pantalla
+    width: 450,
+    maxWidth: '80%', 
   },
 });
 
