@@ -10,12 +10,13 @@ interface CreditCardFormProps {
   onFlipCard: (isFlipped: boolean) => void;
 }
 
+// Define validation schema for the form
 const schema = yup.object().shape({
   cardNumber: yup.string().required('Card number is required').min(16, 'Must be 16 digits'),
   cardHolder: yup.string().required('Card holder name is required'),
   expiryMonth: yup.string().required('Expiry month is required'),
   expiryYear: yup.string().required('Expiry year is required'),
-  cvv: yup.string().required('cvv is required').min(3, 'Must be 3 digits'),
+  cvv: yup.string().required('CVV is required').min(3, 'Must be 3 digits'),
 });
 
 const CreditCardForm: React.FC<CreditCardFormProps> = ({ onUpdate, onFlipCard }) => {
@@ -23,81 +24,79 @@ const CreditCardForm: React.FC<CreditCardFormProps> = ({ onUpdate, onFlipCard })
     resolver: yupResolver(schema),
   });
 
-  // Watch for changes in the fields to update the card
+  // Watch for changes in the form fields to update the credit card information
   const cardNumber = watch('cardNumber', '');
   const cardHolder = watch('cardHolder', '');
   const expiryMonth = watch('expiryMonth', '');
   const expiryYear = watch('expiryYear', '');
   const cvv = watch('cvv', '');
 
-  // Raw value of card number without spaces
+  // Store the raw card number without formatting
   const [rawCardNumber, setRawCardNumber] = React.useState('');
 
+  // Update parent component whenever form fields change
   React.useEffect(() => {
     const formattedYear = expiryYear ? expiryYear.slice(-2) : "YY";
     const expiry = `${expiryMonth || "MM"}/${formattedYear}`;
-    
-    onUpdate("cardNumber", rawCardNumber); // Update with the raw value without spaces
+
+    onUpdate("cardNumber", rawCardNumber); // Update the raw card number
     onUpdate("cardHolder", cardHolder);
     onUpdate("expiryMonth", expiryMonth);
     onUpdate("expiryYear", expiryYear);
-    onUpdate("expiry", expiry);
+    onUpdate("expiry", expiry); // Update the formatted expiry date
   }, [rawCardNumber, cardHolder, expiryMonth, expiryYear]);
 
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 15 }, (_, i) => (currentYear + i).toString()); // Show full year format
-  const months = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, '0'));
+  const years = Array.from({ length: 15 }, (_, i) => (currentYear + i).toString()); // Generate 15 years starting from current
+  const months = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, '0')); // Generate month options (01 to 12)
 
+  // Determine card type based on the card number prefix
   const getCardType = (cardNumber: string) => {
-    if (/^4/.test(cardNumber)) return 'visa'; // Visa comença amb 4
-    if (/^5[1-5]/.test(cardNumber)) return 'mastercard'; // MasterCard comença amb 51-55
-    if (/^3[47]/.test(cardNumber)) return 'amex'; // American Express comença amb 34 o 37
-    if (/^6011/.test(cardNumber)) return 'discover'; // Discover comença amb 6011 o 65
-    if (/^9792/.test(cardNumber)) return 'troy'; // Troy comença amb 9792
-    return 'visa'; // Si no coincideix amb cap, logotip per defecte
+    if (/^4/.test(cardNumber)) return 'visa'; // Visa starts with 4
+    if (/^5[1-5]/.test(cardNumber)) return 'mastercard'; // MasterCard starts with 51-55
+    if (/^3[47]/.test(cardNumber)) return 'amex'; // American Express starts with 34 or 37
+    if (/^6011/.test(cardNumber)) return 'discover'; // Discover starts with 6011 or 65
+    if (/^9792/.test(cardNumber)) return 'troy'; // Troy starts with 9792
+    return 'visa'; // Default to Visa if no match
   };
-  
 
+  // Format the card number based on its type
   const formatCardNumber = (text: string, cardType: string) => {
     const cleaned = text.replace(/\D+/g, ''); // Remove all non-numeric characters
-  
+
     if (cardType === "amex") {
-      // Amex format: #### ###### #####
+      // American Express format: #### ###### #####
       return cleaned
         .replace(/(\d{1,4})(\d{1,6})?(\d{1,5})?/, (_, g1, g2, g3) =>
           [g1, g2, g3].filter(Boolean).join(" ")
         )
-        .trim(); // Join groups with spaces and trim extra spaces
+        .trim();
     }
-  
+
     // Default format: #### #### #### ####
     return cleaned
       .replace(/(\d{1,4})(\d{1,4})?(\d{1,4})?(\d{1,4})?/, (_, g1, g2, g3, g4) =>
         [g1, g2, g3, g4].filter(Boolean).join(" ")
       )
-      .trim(); // Join groups with spaces and trim extra spaces
+      .trim();
   };
-  
-  
-  
-  const handleCardNumberChange = (text: string) => {
-    const cleaned = text.replace(/\D+/g, ''); // Remove all non-numeric characters
-    const cardType = getCardType(cleaned); // Detect the card type
-  
-    // Limit the maximum length based on the card type
-    const maxLength = cardType === "amex" ? 15 : 16;
-    const limited = cleaned.slice(0, maxLength); // Limit the input to the max length
-  
-    const formatted = formatCardNumber(limited, cardType); // Apply the appropriate format for display
-  
-    setRawCardNumber(limited); // Store the raw value (without spaces)
-    setValue("cardNumber", formatted); // Update the displayed value in the form
-    onUpdate("cardNumber", limited); // Notify the parent component with the raw value
-  };
-  
-  
-  
 
+  // Handle card number input changes
+  const handleCardNumberChange = (text: string) => {
+    const cleaned = text.replace(/\D+/g, ''); // Remove non-numeric characters
+    const cardType = getCardType(cleaned); // Detect the card type
+
+    // Set maximum length based on card type
+    const maxLength = cardType === "amex" ? 15 : 16;
+    const limited = cleaned.slice(0, maxLength); // Limit input to the maximum length
+
+    const formatted = formatCardNumber(limited, cardType); // Format for display
+
+    setRawCardNumber(limited); // Store raw value
+    setValue("cardNumber", formatted); // Update form value
+    onUpdate("cardNumber", limited); // Notify parent with raw value
+  };
+  
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.form}>
