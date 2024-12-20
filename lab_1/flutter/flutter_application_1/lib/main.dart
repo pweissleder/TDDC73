@@ -28,12 +28,14 @@ class ExampleUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return SingleChildScrollView(
+      // Added ScrollView
+      padding: const EdgeInsets.all(16.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Image.asset(
-            '/Users/pascal/Documents/Repositories/Uni/TDDC73/lab_1/flutter/flutter_application_1/assets/circle_image.png', // Adjust path if needed
+            'assets/circle_image.png',
             width: 150,
             height: 150,
           ),
@@ -45,27 +47,29 @@ class ExampleUI extends StatelessWidget {
                 onPressed: () {},
                 child: const Text("BUTTON"),
                 style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor: Color(0xFFD6D7D7),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(4), // Less rounded corners
-                    )),
+                  foregroundColor: Colors.black,
+                  backgroundColor: const Color(0xFFD6D7D7),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(4), // Less rounded corners
+                  ),
+                ),
               ),
               ElevatedButton(
                 onPressed: () {},
                 child: const Text("BUTTON"),
                 style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor: Color(0xFFD6D7D7),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(4), // Less rounded corners
-                    )),
+                  foregroundColor: Colors.black,
+                  backgroundColor: const Color(0xFFD6D7D7),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(4), // Less rounded corners
+                  ),
+                ),
               ),
             ],
           ),
@@ -77,27 +81,29 @@ class ExampleUI extends StatelessWidget {
                 onPressed: () {},
                 child: const Text("BUTTON"),
                 style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor: Color(0xFFD6D7D7),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(4), // Less rounded corners
-                    )),
+                  foregroundColor: Colors.black,
+                  backgroundColor: const Color(0xFFD6D7D7),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(4), // Less rounded corners
+                  ),
+                ),
               ),
               ElevatedButton(
                 onPressed: () {},
                 child: const Text("BUTTON"),
                 style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor: Color(0xFFD6D7D7),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(4), // Less rounded corners
-                    )),
+                  foregroundColor: Colors.black,
+                  backgroundColor: const Color(0xFFD6D7D7),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(4), // Less rounded corners
+                  ),
+                ),
               ),
             ],
           ),
