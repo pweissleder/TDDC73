@@ -5,18 +5,15 @@ import AppStyles from './styles/AppStyles'; // Import the AppStyles
 export default function App() {
   return (
     <View style={AppStyles.container}>
-      {/* Títol amb fons complet de punta a punta */}
       <View style={AppStyles.titleContainer}>
         <Text style={AppStyles.title}>Example 1: React-Native</Text>
       </View>
 
-      {/* Imatge */}
       <Image
         style={AppStyles.image}
-        source={require('../assets/images/Lab1React.png')} // Canvia aquest path segons la teva imatge
+        source={require('../assets/images/Lab1React.png')} 
       />
 
-      {/* Botons */}
       <View style={AppStyles.buttonRow}>
         <TouchableOpacity style={AppStyles.buttonContainer}>
           <Text style={AppStyles.buttonText}>BUTTON</Text>
@@ -34,7 +31,6 @@ export default function App() {
         </TouchableOpacity>
       </View>
 
-      {/* Camp d'entrada */}
       <View style={AppStyles.inputRow}>
         <Text style={AppStyles.label}>Email:</Text>
         <TextInput style={AppStyles.inputInline} placeholder="Enter your email" />

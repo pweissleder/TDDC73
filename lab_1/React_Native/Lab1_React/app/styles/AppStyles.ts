@@ -8,16 +8,16 @@ const AppStyles = StyleSheet.create({
       backgroundColor: '#fff',
     },
     titleContainer: {
-      width: '100%', // Amplada completa
+      width: '100%', 
       height: '10%',
-      backgroundColor: '#00a08a', // Color turquesa
-      paddingVertical: 10, // Espai vertical
+      backgroundColor: '#00a08a', 
+      paddingVertical: 10, 
       justifyContent: 'flex-end',    
       marginBottom: 15,
     },
     title: {
       fontSize: 24,
-      color: '#fff', // Text blanc
+      color: '#fff', 
       textAlign: 'left',
       paddingLeft: 15,
     },
@@ -56,10 +56,10 @@ const AppStyles = StyleSheet.create({
     label: {
       fontSize: 16,
       color: '#5c5c5c',
-      marginRight: 40, // Espai entre l'etiqueta i el camp d'entrada
+      marginRight: 40, 
     },
     inputInline: {
-      flex: 1, // Deixa que l'input ocupi tot l'espai disponible
+      flex: 1, 
       height: 40,
       borderBottomWidth: 1,
       borderBottomColor: '#d81b60',

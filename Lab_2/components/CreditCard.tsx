@@ -2,17 +2,18 @@ import React from 'react';
 import { Animated, View, Text, StyleSheet, Image } from 'react-native';
 
 interface CreditCardProps {
-  cardNumber: string;
-  cardHolder: string;
-  expiry: string;
-  CVV: string;
-  isFlipped: boolean;
+  cardNumber: string; // Card number as a string
+  cardHolder: string; // Name of the cardholder
+  expiry: string; // Expiration date in MM/YY format
+  CVV: string; // Card's CVV number
+  isFlipped: boolean; // Whether the card is flipped to show the back
 }
 
 const CreditCard: React.FC<CreditCardProps> = ({ cardNumber, cardHolder, expiry, CVV, isFlipped }) => {
-  const animatedValue = React.useRef(new Animated.Value(0)).current;
-  const [rotation, setRotation] = React.useState(0);
+  const animatedValue = React.useRef(new Animated.Value(0)).current; // Animation value for flipping
+  const [rotation, setRotation] = React.useState(0); // Current rotation state of the card
 
+  // List of background images for the card
   const backgroundImages = [
     require('../assets/images/1.jpeg'),
     require('../assets/images/2.jpeg'),
@@ -40,13 +41,15 @@ const CreditCard: React.FC<CreditCardProps> = ({ cardNumber, cardHolder, expiry,
     require('../assets/images/24.jpeg'),
     require('../assets/images/25.jpeg'),
   ];
-  
-  const [backgroundImage, setBackgroundImage] = React.useState(null);
 
+  const [backgroundImage, setBackgroundImage] = React.useState(null); // Current background image
+
+  // Array of animated values for individual characters (optional animation effect)
   const animatedChars = React.useRef(
     Array.from({ length: 40 }, () => new Animated.Value(0))
   ).current;
 
+  // Set a random background image initially
   React.useEffect(() => {
     const initialBackgroundImage = backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
     if (!backgroundImage) {
@@ -54,15 +57,16 @@ const CreditCard: React.FC<CreditCardProps> = ({ cardNumber, cardHolder, expiry,
     }
   }, []);
 
+  // Handle card flip animation based on `isFlipped` prop
   React.useEffect(() => {
     Animated.timing(animatedValue, {
-      toValue: isFlipped ? 1 : 0,
-      duration: 600,
+      toValue: isFlipped ? 1 : 0, // Flip to front (0) or back (1)
+      duration: 600, // Animation duration in milliseconds
       useNativeDriver: true, // Enable native animations for better performance
     }).start();
   }, [isFlipped]);
-  
 
+  // Interpolation for front and back rotation during flip animation
   const frontInterpolate = animatedValue.interpolate({
     inputRange: [0, 1],
     outputRange: ['0deg', '180deg'],
@@ -73,6 +77,7 @@ const CreditCard: React.FC<CreditCardProps> = ({ cardNumber, cardHolder, expiry,
     outputRange: ['180deg', '360deg'],
   });
 
+  // Styles for front and back card views
   const frontStyle = {
     transform: [{ rotateY: frontInterpolate }],
   };
@@ -80,13 +85,15 @@ const CreditCard: React.FC<CreditCardProps> = ({ cardNumber, cardHolder, expiry,
   const backStyle = {
     transform: [{ rotateY: backInterpolate }],
   };
-  
+
+  // Format the CVV to show placeholder characters for hidden digits
   const formatCVV = (CVV: string) => {
-    return CVV.padEnd(3, '#');
+    return CVV.padEnd(3, '#'); // Ensure CVV is always 3 characters long
   };
 
+  // Determine card type based on the card number
   const getCardType = (cardNumber: string) => {
-    let type = "visa"; // Default to visa
+    let type = "visa"; // Default to Visa
     if (/^3[47]/.test(cardNumber)) type = "amex";
     else if (/^4/.test(cardNumber)) type = "visa";
     else if (/^5[1-5]/.test(cardNumber)) type = "mastercard";
@@ -94,23 +101,25 @@ const CreditCard: React.FC<CreditCardProps> = ({ cardNumber, cardHolder, expiry,
     else if (/^9792/.test(cardNumber)) type = "troy";
     return type;
   };
-  
+
+  // Format card number based on the type (e.g., Visa, Amex)
   const formatCardNumber = (text: string, cardType: string) => {
     const cleaned = text.replace(/\D+/g, ''); // Remove all non-numeric characters
-  
+
     if (cardType === "amex") {
-      // Amex format: #### ###### #####
-      const padded = cleaned.padEnd(15, '#'); // Pad to 15 characters with #
+      // Format for Amex: #### ###### #####
+      const padded = cleaned.padEnd(15, '#'); // Ensure Amex has 15 characters
       return `${padded.slice(0, 4)} ${padded.slice(4, 10)} ${padded.slice(10, 15)}`.trim();
     }
-  
+
     // Default format: #### #### #### ####
-    const padded = cleaned.padEnd(16, '#'); // Pad to 16 characters with #
+    const padded = cleaned.padEnd(16, '#'); // Ensure other cards have 16 characters
     return `${padded.slice(0, 4)} ${padded.slice(4, 8)} ${padded.slice(8, 12)} ${padded.slice(12, 16)}`.trim();
   };
-  
-  
+
   const cardType = getCardType(cardNumber) as keyof typeof logoImages;
+
+  // Card logos based on the card type
   const logoImages = {
     visa: require('../assets/images/visa.png'),
     mastercard: require('../assets/images/mastercard.png'),
@@ -122,6 +131,7 @@ const CreditCard: React.FC<CreditCardProps> = ({ cardNumber, cardHolder, expiry,
   return (
     <View style={styles.container}>
       <View style={styles.flipContainer}>
+        {/* Front side of the card */}
         <Animated.View style={[styles.card, frontStyle]}>
           <Image source={backgroundImage || require('../assets/images/1.jpeg')} style={styles.backgroundImage} />
           <View style={styles.overlay} />
@@ -142,6 +152,7 @@ const CreditCard: React.FC<CreditCardProps> = ({ cardNumber, cardHolder, expiry,
           </View>
         </Animated.View>
 
+        {/* Back side of the card */}
         <Animated.View style={[styles.card, styles.backCard, backStyle]}>
           <Image source={backgroundImage || require('../assets/images/1.jpeg')} style={styles.backgroundImage} />
           <View style={styles.overlay} />
@@ -155,7 +166,6 @@ const CreditCard: React.FC<CreditCardProps> = ({ cardNumber, cardHolder, expiry,
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
@@ -168,12 +178,12 @@ const styles = StyleSheet.create({
     perspective: '1000',
   },
   backgroundImage: {
-    position: 'absolute', // Ensures the image is behind other content
-    top: 0, // Aligns the image to the top of the card
-    left: 0, // Aligns the image to the left of the card
-    width: '100%', // Scales the image to the full width of the card
-    height: '100%', // Scales the image to the full height of the card
-    borderRadius: 10, // Applies the same border radius as the card
+    position: 'absolute',
+    top: 0, 
+    left: 0,
+    width: '100%', 
+    height: '100%', 
+    borderRadius: 10,
     resizeMode: 'cover', // Ensures the image covers the entire card area
   },
   overlay: {

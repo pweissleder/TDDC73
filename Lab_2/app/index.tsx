@@ -4,41 +4,44 @@ import CreditCard from '../components/CreditCard';
 import CreditCardForm from '../components/CreditCardForm';
 
 interface CardData {
-  cardNumber: string;
-  cardHolder: string;
-  expiry: string;
-  CVV: string;
-  expiryMonth?: string;
-  expiryYear?: string;
+  cardNumber: string; // Credit card number
+  cardHolder: string; // Cardholder's name
+  expiry: string; // Expiry date in MM/YY format
+  CVV: string; // CVV code
+  expiryMonth?: string; // Expiry month (optional for internal tracking)
+  expiryYear?: string; // Expiry year (optional for internal tracking)
 }
 
 const App = () => {
+  // State to hold the card data, including card number, cardholder name, expiry date, and CVV.
+  // This data is updated dynamically as the user interacts with the form.
   const [cardData, setCardData] = useState<CardData>({
-    cardNumber: '',
-    cardHolder: '',
-    expiry: '',
-    CVV: '',
+    cardNumber: '', 
+    cardHolder: '', 
+    expiry: '', 
+    CVV: '', 
   });
 
-  const [isFlipped, setIsFlipped] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(false); // State to manage whether the card is flipped
 
+  // Update card data when any field changes in the form
   const handleUpdate = (field: string, value: string) => {
     setCardData((prevState) => ({
-      ...prevState,
-      [field]: value,
+      ...prevState, // Preserve existing fields
+      [field]: value, // Update the specified field
     }));
   };
-  
 
+  // Flip the card when necessary (e.g., when editing CVV)
   const handleFlipCard = (flip: boolean) => {
     setIsFlipped(flip);
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Contenidor per controlar la posició relativa */}
+      {/* Container for relative positioning */}
       <View style={styles.relativeContainer}>
-        {/* Targeta de crèdit */}
+        {/* Credit Card Component */}
         <View style={styles.cardWrapper}>
           <CreditCard
             cardNumber={cardData.cardNumber}
@@ -49,9 +52,9 @@ const App = () => {
           />
         </View>
 
-        {/* Formulari */}
+        {/* Credit Card Form */}
         <View style={[styles.formWrapper, Platform.OS === 'web' && styles.webFormWrapper]}>
-          <CreditCardForm onUpdate={handleUpdate} onFlipCard={handleFlipCard}/>
+          <CreditCardForm onUpdate={handleUpdate} onFlipCard={handleFlipCard} />
         </View>
       </View>
     </SafeAreaView>
@@ -72,13 +75,13 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   cardWrapper: {
-    zIndex: 2, // Assegura que la targeta estigui davant
+    zIndex: 2, 
     position: 'absolute',
     top: 0,
   },
   formWrapper: {
-    zIndex: 1, // El formulari queda darrere de la targeta
-    marginTop: 110, // Espai per ajustar la superposició
+    zIndex: 1, 
+    marginTop: 110, 
     width: '90%',
     height: 415,
     backgroundColor: '#ffffff',
@@ -90,8 +93,8 @@ const styles = StyleSheet.create({
     elevation: 5, // Ombra per Android
   },
   webFormWrapper: {
-    width: 450, // Amplada més gran que la targeta per a la plataforma web
-    maxWidth: '80%', // Limitar l'amplada a un màxim del 80% de la pantalla
+    width: 450,
+    maxWidth: '80%', 
   },
 });
 
