@@ -2,15 +2,19 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, ImageSourcePropType } from 'react-native';
 
 export interface TestimonyCardProps {
+
+  // Text Content
   authorName: string;
   authorDescription: string;
   picture?: ImageSourcePropType;
   textComment: string;
 
+  // Styling
   colorTestimonyBackground?: string;
   colorTestimonyText?: string;
   colorTestimonyAuthorName?: string;
   colorTestimonyAuthorDescription?: string;
+
   font?: string;
 }
 
@@ -43,7 +47,7 @@ const TestimonyCard: React.FC<TestimonyCardProps> = ({
       </Text>
 
       <View style={styles.authorContainer}>
-        {/* Picture (if provided) */}
+        {/* Picture if provided, otherwise placeholder */}
         {picture ? (
           <Image source={picture} style={styles.avatar} />
         ) : (
@@ -71,6 +75,8 @@ const TestimonyCard: React.FC<TestimonyCardProps> = ({
     </View>
   );
 };
+
+// Styles
 
 const styles = StyleSheet.create({
   cardContainer: {

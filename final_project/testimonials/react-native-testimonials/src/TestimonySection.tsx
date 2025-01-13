@@ -31,6 +31,8 @@ export interface TestimonySectionProps {
 }
 
 const TestimonySection: React.FC<TestimonySectionProps> = ({
+
+  // Default values
   color_background = '#EEEEEE',
   color_title = '#000000',
   color_subtitle = '#333333',
@@ -91,6 +93,8 @@ const TestimonySection: React.FC<TestimonySectionProps> = ({
     </View>
   );
 };
+
+// Styles
 
 const styles = StyleSheet.create({
   container: {

@@ -11,46 +11,48 @@ import {
   ViewStyle,
 } from 'react-native';
 
-////////////////////////////////////////////////////////////////////////////////
 // Types
-////////////////////////////////////////////////////////////////////////////////
 
-/**
- * Interface for a single Quality Attribute.
- */
+// Interface for a single Quality Attribute.
 export interface QualityAttribute {
   name: string;
+
   checked: boolean;
   max_sec_value: number;
   current_sec_value: number;
   sec_threshhold: number;
-  // For demonstration, we declare evaluate here, though you can keep it external.
+
   evaluate?: (passwordText: string) => number;
 }
 
-/**
- * Interface for the styling / visual attributes for the password form.
- */
+// Interface for the styling / visual customization.
 export interface PasswordFormData {
-  color_background: string;                  // e.g. '#CCCCCC'
-  color_background_from: string;             // (if you want a gradient “from” color, else ignore)
-  color_background_password_field: string;   // e.g. '#FFFFFF'
-  color_title: string;                      // e.g. '#FFFFFF'
-  color_password_text: string;              // e.g. '#000000'
-  color_continue_button_active: string;      // e.g. '#6200EE'
-  current_color_shadow: string;             // dynamic color shadow (will be updated)
-  text_font: string;                         // e.g. 'System' or 'Roboto'
-  color_shadow_weak: string;                // e.g. 'lightgreen'
-  color_shadow_medium: string;              // e.g. 'orange'
-  color_shadow_strong: string;              // e.g. 'red'
-  image_quality_attribute_checked: any;      // e.g. require('path/to/checked.png')
-  image_quality_attribute_unchecked: any;    // e.g. require('path/to/unchecked.png')
-  image_lock: any;                          // e.g. require('path/to/lock.png')
+  color_background: string;                  
+  color_background_from: string;             
+  color_background_password_field: string;  
+
+  // Text
+  color_title: string;                    
+  color_password_text: string;      
+
+  text_font: string;             
+
+  //Button
+  color_continue_button_active: string;                         
+
+  // Card shadow
+  current_color_shadow: string;             // dynamic color shadow
+  color_shadow_weak: string;                
+  color_shadow_medium: string;              
+  color_shadow_strong: string;              
+
+  // Images
+  image_quality_attribute_checked: any;      
+  image_quality_attribute_unchecked: any;   
+  image_lock: any;                         
 }
 
-/**
- * Props for the main PasswordForm component.
- */
+// Props for the main PasswordForm component.
 interface PasswordFormProps {
   passwordForm: PasswordFormData;
   qualityAttributes: QualityAttribute[];
@@ -58,19 +60,16 @@ interface PasswordFormProps {
   threshold_sec_score: number;
 }
 
-/**
- * Reusable sub-component for showing the password strength meter.
- */
+// Showing the password strength in a progress bar.
 interface PasswordStrengthMeterProps {
   width: number;           // the container width for the bar
   strengthRatio: number;   // fraction (0.0 -> 1.0) how strong the password is
   shadowColor: string;     // color for the meter
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// PasswordStrengthMeter
-////////////////////////////////////////////////////////////////////////////////
+// Components
 
+// PasswordStrengthMeter
 const PasswordStrengthMeter: FC<PasswordStrengthMeterProps> = ({
   width,
   strengthRatio,
@@ -85,39 +84,35 @@ const PasswordStrengthMeter: FC<PasswordStrengthMeterProps> = ({
   );
 };
 
-////////////////////////////////////////////////////////////////////////////////
-// Main PasswordForm
-////////////////////////////////////////////////////////////////////////////////
-
+// Main PasswordForm 
 const PasswordForm: FC<PasswordFormProps> = ({
   passwordForm,
   qualityAttributes,
   title = 'Title',
   threshold_sec_score,
 }) => {
+
+    // State hooks
   const [passwordText, setPasswordText] = useState<string>('');
   const [attributes, setAttributes] = useState<QualityAttribute[]>(qualityAttributes);
   const [currentSecScore, setCurrentSecScore] = useState<number>(0);
   const [maxSecScore, setMaxSecScore] = useState<number>(0);
   const [shadowColor, setShadowColor] = useState<string>(passwordForm.current_color_shadow);
 
-  /**
-   * Initialize the maxSecScore once from all attributes.
-   */
+  // Initialize the maxSecScore once from all attributes.
+ 
   useEffect(() => {
     const totalMax = attributes.reduce((sum, attr) => sum + attr.max_sec_value, 0);
     setMaxSecScore(totalMax);
   }, [attributes]);
 
-  /**
-   * Evaluate quality attributes whenever password changes.
-   */
+  // Evaluate quality attributes whenever password changes.
   useEffect(() => {
-    // 1) Evaluate each attribute’s current_sec_value
+    // 1. Evaluate each attribute’s current_sec_value
     const updatedAttributes = attributes.map((attr) => {
       let updatedCurrent = 0;
 
-      // If we have a custom evaluate function, use it; else dummy logic
+      // If custom evaluate function, else dummy logic
       if (attr.evaluate) {
         updatedCurrent = attr.evaluate(passwordText);
       } else {
@@ -126,7 +121,7 @@ const PasswordForm: FC<PasswordFormProps> = ({
           passwordText.length >= attr.sec_threshhold ? attr.max_sec_value : 0;
       }
 
-      // Mark as checked if we surpass the threshold
+      // Mark as checked if the threshold is surpassed
       const updatedChecked = updatedCurrent >= attr.sec_threshhold;
 
       return {
@@ -136,17 +131,17 @@ const PasswordForm: FC<PasswordFormProps> = ({
       };
     });
 
-    // 2) Update the attribute array in state
+    // 2. Update the attribute array
     setAttributes(updatedAttributes);
 
-    // 3) Compute the new current_sec_score
+    // 3. Compute new current_sec_score
     const totalCurrentScore = updatedAttributes.reduce(
       (sum, attr) => sum + attr.current_sec_value,
       0
     );
     setCurrentSecScore(totalCurrentScore);
 
-    // 4) Update shadow color based on ratio
+    // 4. Update shadow color based on ratio
     if (maxSecScore > 0) {
       const ratio = totalCurrentScore / maxSecScore;
       if (ratio > 0.8) {
@@ -161,14 +156,10 @@ const PasswordForm: FC<PasswordFormProps> = ({
     }
   }, [passwordText, maxSecScore]);
 
-  /**
-   * Helper to see if we can continue.
-   */
+  // Helper to see if the continue can be activated
   const canContinue = currentSecScore >= threshold_sec_score;
 
-  /**
-   * Render a single Quality Attribute row
-   */
+  // Render single Quality Attribute row
   const renderQualityAttribute = (attr: QualityAttribute, index: number) => {
     const iconSource = attr.checked
       ? passwordForm.image_quality_attribute_checked
@@ -185,13 +176,13 @@ const PasswordForm: FC<PasswordFormProps> = ({
   };
 
 
-  /* Form Component itselve */
+  // Form Component itselve
   return (
     <View style={[styles.root, { backgroundColor: passwordForm.color_background }]}>
       {/* Container that simulates the “card”  */}
       <View
         style={[
-          styles.card, // existing iOS/Android shadow in StyleSheet
+          styles.card, 
           {
             backgroundColor: passwordForm.color_background_from,
             //Override for iOS/Android shadow color 
@@ -235,7 +226,7 @@ const PasswordForm: FC<PasswordFormProps> = ({
           onChangeText={setPasswordText}
         />
 
-        {/* Password Strength Meter (optional) */}
+        {/* Password Strength Meter */}
         <PasswordStrengthMeter
           width={200}
           strengthRatio={maxSecScore === 0 ? 0 : currentSecScore / maxSecScore}
@@ -268,9 +259,8 @@ const PasswordForm: FC<PasswordFormProps> = ({
   );
 };
 
-////////////////////////////////////////////////////////////////////////////////
+
 // Styles
-////////////////////////////////////////////////////////////////////////////////
 
 const styles = StyleSheet.create({
   root: {

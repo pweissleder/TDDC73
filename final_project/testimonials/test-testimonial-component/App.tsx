@@ -35,6 +35,8 @@ const sampleTestimonies: TestimonyItem[] = [
     text_comment: 'My go-to solution for efficiency and quality. Will buy again!',
   },
 ];
+
+
 const App = () => (
   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
      <TestimonySection
@@ -44,7 +46,7 @@ const App = () => (
         color_testemony_background="#464CF6"
         color_testemony_text="#D9D9D9"
         color_testemony_author_name="#000000"
-        color_testemony_author_description="#777777"
+        color_testemony_author_description="#ffffff"
         font="Helvetica"
         text_title="What Our Customers Say"
         text_subtitle="Real feedback from real users"

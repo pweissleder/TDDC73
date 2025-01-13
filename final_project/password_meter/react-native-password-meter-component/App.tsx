@@ -4,19 +4,26 @@ import PasswordForm, { PasswordFormData, QualityAttribute,} from './src/Password
 
 export default function App() {
   const passwordFormData: PasswordFormData = {
+    // Color Styling 
     color_background: '#eeeeee',
     color_background_from: '#888888',
     color_background_password_field: '#ffffff',
     color_title: '#ffffff',
     color_password_text: '#000000',
     color_continue_button_active: '#6200EE',
-    current_color_shadow: '#808080', // default grey
+    
     text_font: 'System',
+    
+    // Colors to show password strength
+    current_color_shadow: '#808080', // default grey
+    
     color_shadow_weak: 'red',
     color_shadow_medium: 'orange',
     color_shadow_strong: 'lightgreen',
-    image_quality_attribute_checked: require('./assets/checked.png'),
-    image_quality_attribute_unchecked: require('./assets/unchecked.png'),
+    
+    image_quality_attribute_checked: require('./assets/checked.png'),   // Icon for satisfied Quality Attribute
+    image_quality_attribute_unchecked: require('./assets/unchecked.png'), // Icon for unsatisfied Quality Attribute
+    
     image_lock: require('./assets/lock.png'),
   };
 
