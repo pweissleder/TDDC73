@@ -1,0 +1,19 @@
+
+{
+  "name": "your-library-name",
+  "version": "1.0.0",
+  "description": "A React Native library with reusable components",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "author": "Your Name",
+  "license": "MIT",
+  "keywords": ["react-native", "library", "expo", "typescript"],
+  "dependencies": {
+    "expo-cli": "^6.3.12"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-native": ">=0.68.0"
+  }
+}
+  

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "expo-cli": "^6.3.12",
+    "typescript": "^5.7.3"
+  }
+}
