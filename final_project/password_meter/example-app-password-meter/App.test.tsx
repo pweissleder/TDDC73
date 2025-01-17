@@ -1,14 +1,14 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import App from './App';
 import { PasswordForm, PasswordFormData, QualityAttribute,} from 'react-native-password-meter-component';
+
 
 // Sample PasswordFormData and QualityAttributes for testing
 const testPasswordFormData = {
   color_background: '#cccccc',
   color_background_from: '#777777',
   color_background_password_field: '#ffffff',
-  current_color_shadow: '#777777',
+  current_color_shadow: '#777776',
   color_shadow_weak: 'red',
   color_shadow_medium: 'yellow',
   color_shadow_strong: 'lightgreen',
@@ -30,10 +30,6 @@ function evalContainsSpecial(passwordText: string) {
   return Math.min(specials.length * 10, 50);
 }
 
-function evalContainsNumberWrong(passwordText: string) {
-  // Wrong implementation of "Contains number" for testing. Checks if at least 1 digit. 
-  return passwordText.length >= 1 ? 10 : 0 ;
-}
 
 // Example QualityAttributes implementations 
 const testQualityAttributes: QualityAttribute[] = [
@@ -59,7 +55,7 @@ const testQualityAttributes: QualityAttribute[] = [
     max_sec_value: 50,
     current_sec_value: 0,
     sec_threshhold: 10,
-    evaluate: evalContainsSpecial,
+    evaluate: evalContainsSpecial, 
   },
 ];
 
@@ -79,17 +75,17 @@ describe('PasswordForm Tests', () => {
           qualityAttributes={testQualityAttributes}
           threshold_sec_score={40}
           title="Test Password Form"
-          testID="password-form"
         />
       );
 
-      // extInput
+      // dynamic Components
       const passwordInput = getByPlaceholderText('Password_text');
-      const shadowView = getByTestId('password-form'); 
+      const shadowView = getByTestId('password-form');
 
-          // Find the View with shadowColor 'lightgreen' (weak)
+          // 2) Type a password that triggers a "weak" ratio (> 0.2)
+          fireEvent.changeText(passwordInput, 'assddfghw');
           expect(shadowView).toBeTruthy();
-          expect(shadowView).toHaveStyle({ shadowColor: 'red' });
+          expect(shadowView).toHaveStyle({ shadowColor: 'red' });;
     
           // 2) Type a password that triggers a "medium" ratio (> 0.5)
           fireEvent.changeText(passwordInput, '!!!!!'); // Assuming '!!!!!' gives 50 points
@@ -97,11 +93,9 @@ describe('PasswordForm Tests', () => {
           expect(shadowView).toHaveStyle({ shadowColor: 'yellow' });
     
           // 3) Type a password that triggers a "strong" ratio (> 0.8)
-          fireEvent.changeText(passwordInput, 'abcdefgh!!!'); // Assuming 70 points
-
+          fireEvent.changeText(passwordInput, 'abcd!!!!!!!efgh5!6!!'); // Assuming max points
           expect(shadowView).toBeTruthy();
           expect(shadowView).toHaveStyle({ shadowColor: 'lightgreen' });
-     // ToDo: Insert Check that each current_color_shadow is color_shadow_medium = 'orange'
 
     });
 
@@ -162,7 +156,7 @@ describe('PasswordForm Tests', () => {
 
   describe('End-to-End Test', () => {
     it('Calculates security value of two different passwords and verifies UI changes', () => {
-      const { getByPlaceholderText, getByText, queryAllByTestId } = render(
+      const { getByPlaceholderText, getByText, getByTestId} = render(
         <PasswordForm
           passwordForm={testPasswordFormData}
           qualityAttributes={testQualityAttributes}
@@ -173,20 +167,26 @@ describe('PasswordForm Tests', () => {
 
       const input = getByPlaceholderText('Password_text');
       const continueButton = getByText('Continue');
+      const shadowView = getByTestId('password-form');
 
-      // 1) Enter a weak password. All attributes should remain "unchecked"
+      // 1) Weak password
       fireEvent.changeText(input, 'weak'); // 4 chars, no digits, no special  => 0 points
-
-      // TODO: insert Check sec score to be null and color is red
-
+      // That surpasses threshold 40 => expect button is enabled
       expect(continueButton).toBeDisabled();
 
+      // Check color is default #808080
+      expect(shadowView).toBeTruthy();
+      expect(shadowView).toHaveStyle({ shadowColor: '#808080' });;
+
+
       // 2) Enter a strong password
-      fireEvent.changeText(input, 'abcd1234!!'); // 8 chars => 20, + digit => 10, + 2 special => 20 => total=50
-      // That surpasses threshold 40 => expect button is enabled
+      fireEvent.changeText(input, 'abcd1!!!!'); // 8 chars => 20, + digit => 10, + 4 special => 40 => total=70
+   
 
-
-      // ToDo: Insert Check that each attribute icon is now "checked" and that color is at least yellow or lightgreen
+      // Check that each attribute icon is now "checked" and that color is  yellow
+      expect(shadowView).toBeTruthy();
+      expect(shadowView).toHaveStyle({ shadowColor: 'lightgreen' });
+         // Surpasses threshold 40 => expect button is enabled
 
       expect(continueButton).not.toBeDisabled();
 

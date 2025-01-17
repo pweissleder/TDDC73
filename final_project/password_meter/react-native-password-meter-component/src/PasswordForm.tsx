@@ -181,8 +181,10 @@ const PasswordForm: FC<PasswordFormProps> = ({
     <View style={[styles.root, { backgroundColor: passwordForm.color_background }]}>
       {/* Container that simulates the “card”  */}
       <View
+        testID="password-form"
         style={[
-          styles.card, 
+          styles.card,
+      
           {
             backgroundColor: passwordForm.color_background_from,
             //Override for iOS/Android shadow color 
