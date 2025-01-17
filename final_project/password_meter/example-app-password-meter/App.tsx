@@ -19,7 +19,10 @@ export default function App() {
     image_quality_attribute_unchecked: require('./assets/unchecked.png'),
     image_lock: require('./assets/lock.png'),
   };
-
+  function sum(a: any, b: any) {
+    return a + b;
+  }
+  
   const initialQualityAttributes: QualityAttribute[] = [
     {
       name: 'At least 8 chars',
