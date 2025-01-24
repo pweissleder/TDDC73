@@ -127,7 +127,12 @@ export default function RepositoryList() {
               date={endDate}
               onConfirm={(params) => {
                 setShowEndDatePicker(false);
-                if (params.date) setEndDate(params.date);
+                if (params.date) {
+                  const adjustedDate = new Date(
+                    Date.UTC(params.date.getFullYear(), params.date.getMonth(), params.date.getDate())
+                  );
+                  
+                  setEndDate(adjustedDate)};
               }}
               onDismiss={() => setShowEndDatePicker(false)}
             />
